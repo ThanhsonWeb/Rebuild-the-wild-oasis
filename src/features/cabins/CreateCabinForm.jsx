@@ -43,6 +43,7 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
+	// b2: install hook form and use it 
 	return (
 		<Form>
 			<FormRow>

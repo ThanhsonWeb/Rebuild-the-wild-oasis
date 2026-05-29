@@ -47,18 +47,15 @@ const variations = {
 		}
 	`,
 };
+// new way to set default
 
 const Button = styled.button`
 	border-radius: var(--border-radius-sm);
 	border: none;
 	cursor: pointer;
-	${(props) => sizes[props.size]}
-	${(props) => variations[props.variation]}
-`;
 
-Button.defaultProps = {
-	size: "small",
-	variation: "secondary",
-};
+	${({ size = "small" }) => sizes[size]}
+	${({ variation = "secondary" }) => variations[variation]}
+`;
 
 export default Button;
