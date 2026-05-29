@@ -12,7 +12,7 @@ const StyledAppLayout = styled.div`
 `;
 
 const Main = styled.main`
-	background-color: green;
+	background-color: #d7d7d6;
 	padding: 4rem;
 `;
 
