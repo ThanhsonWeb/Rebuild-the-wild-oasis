@@ -3,6 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import useDeleteCabin from "./useDeleteCabin";
+import useCreateCabin from "./useCreateCabin";
+
+import { HiSquares2X2, HiTrash } from "react-icons/hi2";
 
 const TableRow = styled.div`
 	display: grid;
@@ -45,6 +48,8 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }) {
 	const { isDeleting, deleteCabin } = useDeleteCabin();
+	// 1
+	const { isCreating, createCabin } = useCreateCabin();
 
 	const {
 		id: cabinId,
@@ -55,6 +60,18 @@ function CabinRow({ cabin }) {
 		regularPrice,
 	} = cabin;
 
+	function handleDuplicate() {
+		createCabin({
+			name: `copy of ${name}`,
+			discount,
+			image, // already a public URL
+			maxCapacity,
+			regularPrice,
+			skipUpload: true,
+		});
+		console.log("Cabin image:", image);
+	}
+
 	return (
 		<div>
 			<TableRow>
@@ -63,9 +80,14 @@ function CabinRow({ cabin }) {
 				<div>{maxCapacity} guests</div>
 				<Price>{regularPrice}$</Price>
 				<Discount>{discount}$</Discount>
-				<button disabled={isDeleting} onClick={() => deleteCabin(cabinId)}>
-					Delete
-				</button>
+				<div>
+					<button disabled={isCreating} onClick={handleDuplicate}>
+						<HiSquares2X2 />
+					</button>
+					<button disabled={isDeleting} onClick={() => deleteCabin(cabinId)}>
+						<HiTrash />
+					</button>
+				</div>
 			</TableRow>
 		</div>
 	);

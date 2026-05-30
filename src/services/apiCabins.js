@@ -18,25 +18,28 @@ export async function deleteCabin(id) {
 }
 
 //https://cmzzfqlehqfrztjvsxrk.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
-
 export async function createCabin(newCabin) {
-	//1. generate unique name
-	const imageName = `${Date.now()}-${newCabin.image.name}`;
+	let imagePath;
 
-	//2. Upload the file to Supabase storage
-	const { error: storageError } = await supabase.storage
-		.from("cabin-images") // bucket name
-		.upload(imageName, newCabin.image); // file
+	if (!newCabin.skipUpload) {
+		const imageName = `${Date.now()}-${newCabin.image.name}`;
+		const { error: storageError } = await supabase.storage
+			.from("cabin-images")
+			.upload(imageName, newCabin.image);
 
-	if (storageError) throw new Error("Could not upload cabin image");
+		if (storageError) throw new Error("Could not upload cabin image");
 
-	// 3. Supabase then gives you a public URL to access that file.
-	const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+		imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+	} else {
+		imagePath = newCabin.image;
+	}
 
-	// 4. Insert image to database
+	// Remove fields not in the DB schema 
+	const { skipUpload, ...cabinData } = newCabin;
+
 	const { data, error } = await supabase
 		.from("cabins")
-		.insert([{ ...newCabin, image: imagePath }]);
+		.insert([{ ...cabinData, image: imagePath }]);
 
 	if (error) throw new Error("Could not create a new cabin");
 
