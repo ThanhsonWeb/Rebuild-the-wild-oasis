@@ -21,7 +21,7 @@ export async function deleteCabin(id) {
 
 export async function createCabin(newCabin) {
 	//1. generate unique name
-	const imageName = `${Math.random()}-${newCabin.image.name}`;
+	const imageName = `${Date.now()}-${newCabin.image.name}`;
 
 	//2. Upload the file to Supabase storage
 	const { error: storageError } = await supabase.storage

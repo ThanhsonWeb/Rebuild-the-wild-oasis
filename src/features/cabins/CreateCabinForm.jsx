@@ -9,6 +9,7 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { createCabin } from "../../services/apiCabins.js";
 import FormRow from "../../ui/FormRow.jsx";
+import useCreateCabin from "./useCreateCabin.js";
 
 function CreateCabinForm() {
 	const {
@@ -17,23 +18,13 @@ function CreateCabinForm() {
 		reset,
 		formState: { errors },
 	} = useForm();
-
-	const queryClient = useQueryClient();
-	const { isLoading: isCreating, mutate } = useMutation({
-		// mutate(data) -> createCabin(data)
-		mutationFn: createCabin,
-		onSuccess: () => {
-			toast.success("Successfully created new Cabin");
-			// change UI when supabase is on change (refesh)
-			queryClient.invalidateQueries({ queryKey: ["cabins"] });
-			reset();
-		},
-		onError: (error) => toast.error("Could not create Cabin"),
-	});
+	// hook
+	const { isCreating, createCabin } = useCreateCabin();
 
 	function onSubmit(dataForm) {
+		console.log(dataForm);
 		const file = dataForm.image?.[0];
-		mutate({ ...dataForm, image: file });
+		createCabin({ ...dataForm, image: file }, { onSuccess: () => reset() });
 	}
 
 	function onError(errors) {
