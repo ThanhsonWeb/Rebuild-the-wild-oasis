@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 import Input from "../../ui/Input.jsx";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
+import { createCabin } from "../../services/apiCabins.js";
 
 const FormRow = styled.div`
 	display: grid;
@@ -44,12 +46,24 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
-	// b2: install hook form and use it
+	const { register, handleSubmit, reset } = useForm();
 
-	const { register, handleSubmit } = useForm();
-	// all the input value
-	function onSubmit(data) {
-		console.log(data);
+	const queryClient = useQueryClient();
+	const { isLoading, mutate } = useMutation({
+		// mutate(data) -> createCabin(data)
+		mutationFn: createCabin,
+		onSuccess: () => {
+			toast.success("Successfully created new Cabin");
+			// change UI when supabase is on change (refesh)
+			queryClient.invalidateQueries({ queryKey: ["cabins"] });
+			reset();
+		},
+		onError: (error) => toast.error("Could not create Cabin"),
+	});
+
+	function onSubmit(dataForm) {
+		console.log(dataForm);
+		mutate(dataForm);
 	}
 
 	return (
@@ -99,7 +113,7 @@ function CreateCabinForm() {
 				<Button variation="secondary" type="reset">
 					Cancel
 				</Button>
-				<Button>Edit cabin</Button>
+				<Button type="submit">Edit cabin</Button>
 			</FormRow>
 		</Form>
 	);
