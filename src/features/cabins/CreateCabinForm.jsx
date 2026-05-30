@@ -10,8 +10,6 @@ import Textarea from "../../ui/Textarea";
 import { createCabin } from "../../services/apiCabins.js";
 import FormRow from "../../ui/FormRow.jsx";
 
-
-
 function CreateCabinForm() {
 	const {
 		register,
