@@ -31,7 +31,7 @@ export async function createCabin(newCabin) {
 
 		imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 	} else {
-		imagePath = newCabin.image;
+		imagePath = newCabin.image; // already a public URL
 	}
 
 	// Remove fields not in the DB schema 

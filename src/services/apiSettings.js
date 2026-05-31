@@ -1,6 +1,7 @@
-import supabase from "./supabase";
+import {supabase} from "./supabase";
 
 export async function getSettings() {
+  // read data from settings table 
   const { data, error } = await supabase.from("settings").select("*").single();
 
   if (error) {
