@@ -11,7 +11,7 @@ import { createCabin } from "../../services/apiCabins.js";
 import FormRow from "../../ui/FormRow.jsx";
 import useCreateCabin from "./useCreateCabin.js";
 
-function CreateCabinForm() {
+function CreateCabinForm({ onClose }) {
 	const {
 		register,
 		handleSubmit,
@@ -25,6 +25,7 @@ function CreateCabinForm() {
 		console.log(dataForm);
 		const file = dataForm.image?.[0];
 		createCabin({ ...dataForm, image: file }, { onSuccess: () => reset() });
+		onClose?.();
 	}
 
 	function onError(errors) {

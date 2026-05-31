@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { HiXMark } from "react-icons/hi2";
+import { createPortal } from "react-dom";
+
 const StyledModal = styled.div`
 	position: fixed;
 	top: 50%;
@@ -48,16 +50,20 @@ const Button = styled.button`
 		color: var(--color-grey-500);
 	}
 `;
-function Modal({ children ,onClose}) {
-	return (
-		<Overlay>
+function Modal({ children, onClose }) {
+	function handleOverlay(e) {
+		if (e.target === e.currentTarget) onClose();
+	}
+	return createPortal(
+		<Overlay onClick={(e) => handleOverlay(e)}>
 			<StyledModal>
 				<Button onClick={onClose}>
 					<HiXMark />
 				</Button>
 				{children}
 			</StyledModal>
-		</Overlay>
+		</Overlay>,
+		document.body,
 	);
 }
 
